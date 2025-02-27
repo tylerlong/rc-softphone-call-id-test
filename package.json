@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "ringcentral-softphone": "^1.1.4"
+  }
+}
