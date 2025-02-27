@@ -43,6 +43,10 @@ You will also get an event when the call is connected:
 }
 ```
 
-And you will find that `sipMessage.headers['Call-ID']` equals
+And you will find that `sipMessage.headers['Call-ID']` equals to
 `notification.body.activeCalls[0].id`. You will be able to find
-`telephoneSessionId` from the notification payload.
+`telephoneSessionId` from `notification.body.activeCalls[0].telephonySessionId`.
+
+Note, as I tested, you will need to wait for the `CallConnected` event. For
+`Ringing` event, `sipMessage.headers['Call-ID']` does NOT equal to
+`notification.body.activeCalls[0].id`.
