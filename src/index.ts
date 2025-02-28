@@ -30,7 +30,8 @@ const main = async () => {
   const wsExt = new WebSocketExtension();
   await rc.installExtension(wsExt);
   await wsExt.subscribe([
-    "/restapi/v1.0/account/~/extension/~/presence?detailedTelephonyState=true&sipData=true",
+    "/restapi/v1.0/account/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound",
+    // "/restapi/v1.0/account/~/extension/~/presence?detailedTelephonyState=true&sipData=true",
   ], (event) => {
     console.log(JSON.stringify(event, null, 2));
   });

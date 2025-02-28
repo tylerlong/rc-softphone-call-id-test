@@ -11,7 +11,10 @@ doesn't provide the Telephony Session ID for the call.
 ## Workaround solution
 
 Subscribe to
-`"/restapi/v1.0/account/~/extension/~/presence?detailedTelephonyState=true&sipData=true"`
+`/restapi/v1.0/account/~/extension/~/presence?detailedTelephonyState=true&sipData=true`
+
+Ref:
+https://developers.ringcentral.com/api-reference/Detailed-Extension-Presence-with-SIP-Event
 
 Whenever there is an inbound call, You will get a SIP INVITE message:
 
@@ -50,3 +53,52 @@ And you will find that `sipMessage.headers['Call-ID']` equals to
 Note, as I tested, you will need to wait for the `CallConnected` event. For
 `Ringing` event, `sipMessage.headers['Call-ID']` does NOT equal to
 `notification.body.activeCalls[0].id`.
+
+## Solution 2
+
+### Account level
+
+Or you could subscribe to account level events:
+"/restapi/v1.0/account/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound"
+
+Ref:
+https://developers.ringcentral.com/api-reference/Account-Telephony-Sessions-Event
+
+Sample event:
+
+```json
+{
+  "uuid": "8593269783951502957",
+  "subscriptionId": "a09a6bd5-18c4-4224-80d6-c677dd6484e7",
+  "body": {
+    "telephonySessionId": "s-a0d17b72b8218z1954dd290daz19754f10000",
+    "parties": [
+      {
+        "sipData": {
+          "callId": "d75f18b2-320f-403d-9150-9e05bef80365",
+        },
+        "status": {
+          "code": "Answered",
+        },
+      }
+    ],
+    ...
+  }
+}
+```
+
+`notification.body.parties[0].sipData.callId === sipMessage.headers['Call-Id']`
+
+### Extension level
+
+This event provides extension level counterpart:
+`/restapi/v1.0/account/~/extension/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound`
+
+Ref:
+https://developers.ringcentral.com/api-reference/Extension-Telephony-Sessions-Event
+
+## Notes
+
+If you subscribe to extension level events, you will need to make sure that you
+use the same extension to login softphone and to create the subscription.
+Otherwise you will not get notifications due to extension mismatch.
