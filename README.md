@@ -8,13 +8,7 @@ to find Telephony Session ID from SIP message headers.
 But when you receive an inbound phone call using the softphone SDK, SIP server
 doesn't provide the Telephony Session ID for the call.
 
-## Workaround solution
-
-Subscribe to
-`/restapi/v1.0/account/~/extension/~/presence?detailedTelephonyState=true&sipData=true`
-
-Ref:
-https://developers.ringcentral.com/api-reference/Detailed-Extension-Presence-with-SIP-Event
+## Workaround solutions
 
 Whenever there is an inbound call, You will get a SIP INVITE message:
 
@@ -24,37 +18,6 @@ Call-ID: 32b1c547-7b46-4a83-b4e3-f8528c98be99
 CSeq: 17282 INVITE
 ....
 ```
-
-You will also get an event when the call is connected:
-
-```json
-{
-  "uuid": "6682202022092728770",
-  "body": {
-    "telephonyStatus": "CallConnected",
-    "activeCalls": [
-      {
-        "id": "32b1c547-7b46-4a83-b4e3-f8528c98be99",
-        "direction": "Inbound",
-        "telephonyStatus": "CallConnected",
-        "partyId": "p-a0d7bd72b77dez19548d8007fz97f9f60000-2",
-        "telephonySessionId": "s-a0d7bd72b77dez19548d8007fz97f9f60000"
-      }
-    ],
-    ...
-  }
-}
-```
-
-And you will find that `sipMessage.headers['Call-ID']` equals to
-`notification.body.activeCalls[0].id`. You will be able to find
-`telephoneSessionId` from `notification.body.activeCalls[0].telephonySessionId`.
-
-Note, as I tested, you will need to wait for the `CallConnected` event. For
-`Ringing` event, `sipMessage.headers['Call-ID']` does NOT equal to
-`notification.body.activeCalls[0].id`.
-
-## Solution 2
 
 ### Account level
 
@@ -87,7 +50,9 @@ Sample event:
 }
 ```
 
+You can filter the events by
 `notification.body.parties[0].sipData.callId === sipMessage.headers['Call-ID']`
+and get the `telephonySessionId` from `notification.body.telephonySessionId`.
 
 ### Extension level
 
@@ -96,6 +61,45 @@ This event provides extension level counterpart:
 
 Ref:
 https://developers.ringcentral.com/api-reference/Extension-Telephony-Sessions-Event
+
+### Another extension level event
+
+Subscribe to
+`/restapi/v1.0/account/~/extension/~/presence?detailedTelephonyState=true&sipData=true`
+
+Ref:
+https://developers.ringcentral.com/api-reference/Detailed-Extension-Presence-with-SIP-Event
+
+You will get an event when the call is connected:
+
+```json
+{
+  "uuid": "6682202022092728770",
+  "body": {
+    "telephonyStatus": "CallConnected",
+    "activeCalls": [
+      {
+        "id": "32b1c547-7b46-4a83-b4e3-f8528c98be99",
+        "direction": "Inbound",
+        "telephonyStatus": "CallConnected",
+        "partyId": "p-a0d7bd72b77dez19548d8007fz97f9f60000-2",
+        "telephonySessionId": "s-a0d7bd72b77dez19548d8007fz97f9f60000"
+      }
+    ],
+    ...
+  }
+}
+```
+
+You can filter the events by
+`notification.body.activeCalls[0].id === sipMessage.headers['Call-ID']` and get
+the `telephonySessionId` from
+`notification.body.activeCalls[0].telephonySessionId`.
+
+Note, as I tested, for `CallConnected` event, `sipMessage.headers['Call-ID']`
+does equals to `notification.body.activeCalls[0].id`. However, for `Ringing`
+event, `sipMessage.headers['Call-ID']` does NOT equal to
+`notification.body.activeCalls[0].id`.
 
 ## Notes
 
