@@ -87,7 +87,7 @@ Sample event:
 }
 ```
 
-`notification.body.parties[0].sipData.callId === sipMessage.headers['Call-Id']`
+`notification.body.parties[0].sipData.callId === sipMessage.headers['Call-ID']`
 
 ### Extension level
 
