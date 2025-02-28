@@ -59,7 +59,7 @@ Note, as I tested, you will need to wait for the `CallConnected` event. For
 ### Account level
 
 Or you could subscribe to account level events:
-"/restapi/v1.0/account/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound"
+`/restapi/v1.0/account/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound`
 
 Ref:
 https://developers.ringcentral.com/api-reference/Account-Telephony-Sessions-Event
