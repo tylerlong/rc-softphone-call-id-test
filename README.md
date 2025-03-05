@@ -21,6 +21,9 @@ CSeq: 17282 INVITE
 
 ### Account level
 
+Normally you don't need account level events. Since your softphone is just an
+extension. You probably should choose extension level events.
+
 Or you could subscribe to account level events:
 `/restapi/v1.0/account/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound`
 
@@ -106,3 +109,6 @@ event, `sipMessage.headers['Call-ID']` does NOT equal to
 If you subscribe to extension level events, you will need to make sure that you
 use the same extension to login softphone and to create the subscription.
 Otherwise you will not get notifications due to extension mismatch.
+
+Please make sure your RingCentral app has ReadPresence permission. Otherwise
+there will be no events.
