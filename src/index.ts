@@ -29,11 +29,16 @@ const main = async () => {
   });
   const wsExt = new WebSocketExtension();
   await rc.installExtension(wsExt);
-  await wsExt.subscribe([
-    "/restapi/v1.0/account/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound",
-    // "/restapi/v1.0/account/~/extension/~/presence?detailedTelephonyState=true&sipData=true",
+
+  // const extInfo = await rc.restapi().account().extension().get();
+  // console.log(JSON.stringify(extInfo, null, 2));
+
+  const subInfo = await wsExt.subscribe([
+    // "/restapi/v1.0/account/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound",
+    "/restapi/v1.0/account/~/extension/~/presence?detailedTelephonyState=true&sipData=true",
   ], (event) => {
     console.log(JSON.stringify(event, null, 2));
   });
+  // console.log(JSON.stringify(subInfo.subscriptionInfo, null, 2));
 };
 main();
