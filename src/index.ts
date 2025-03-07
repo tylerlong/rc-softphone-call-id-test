@@ -22,6 +22,7 @@ const main = async () => {
   await softphone.register();
   softphone.on("invite", async (inviteMessage) => {
     await softphone.answer(inviteMessage);
+    console.log("Answered");
   });
 
   await rc.authorize({
@@ -35,10 +36,11 @@ const main = async () => {
 
   const subInfo = await wsExt.subscribe([
     // "/restapi/v1.0/account/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound",
-    "/restapi/v1.0/account/~/extension/~/presence?detailedTelephonyState=true&sipData=true",
+    "/restapi/v1.0/account/~/extension/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound",
+    // "/restapi/v1.0/account/~/extension/~/presence?detailedTelephonyState=true&sipData=true",
   ], (event) => {
     console.log(JSON.stringify(event, null, 2));
   });
-  // console.log(JSON.stringify(subInfo.subscriptionInfo, null, 2));
+  console.log(JSON.stringify(subInfo.subscriptionInfo, null, 2));
 };
 main();
