@@ -19,16 +19,13 @@ CSeq: 17282 INVITE
 ....
 ```
 
-### Account level
+### Extension level
 
-Normally you don't need account level events. Since your softphone is just an
-extension. You probably should choose extension level events.
-
-Or you could subscribe to account level events:
-`/restapi/v1.0/account/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound`
+Subscribe to this event:
+`/restapi/v1.0/account/~/extension/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound`
 
 Ref:
-https://developers.ringcentral.com/api-reference/Account-Telephony-Sessions-Event
+https://developers.ringcentral.com/api-reference/Extension-Telephony-Sessions-Event
 
 Sample event:
 
@@ -57,15 +54,10 @@ You can filter the events by
 `notification.body.parties[0].sipData.callId === sipMessage.headers['Call-ID']`
 and get the `telephonySessionId` from `notification.body.telephonySessionId`.
 
-### Extension level
-
-This event provides extension level counterpart:
-`/restapi/v1.0/account/~/extension/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound`
-
-Ref:
-https://developers.ringcentral.com/api-reference/Extension-Telephony-Sessions-Event
-
 ### Another extension level event
+
+This one requires your RingCentral app has ReadPresence permission. Otherwise
+there will be no events.
 
 Subscribe to
 `/restapi/v1.0/account/~/extension/~/presence?detailedTelephonyState=true&sipData=true`
@@ -110,5 +102,27 @@ If you subscribe to extension level events, you will need to make sure that you
 use the same extension to login softphone and to create the subscription.
 Otherwise you will not get notifications due to extension mismatch.
 
-Please make sure your RingCentral app has ReadPresence permission. Otherwise
-there will be no events.
+### Account level events
+
+Normally you don't need account level events. Since your softphone is just an
+extension. You probably should choose extension level events.
+
+Or you could subscribe to account level events:
+`/restapi/v1.0/account/~/telephony/sessions?sipData=true&statusCode=Answered&direction=Inbound`
+
+Ref:
+https://developers.ringcentral.com/api-reference/Account-Telephony-Sessions-Event
+
+But even you subscribe to account level notifications, and you can get all
+notifications from all extensions, NOT all of them contain "sipData". This is by
+design. You can only receive "sipData" if you have the permission to answer the
+call.
+
+To grant subscriber the permission to answer the call:
+
+- Go to service.ringcentral.com, login as super admin
+- Go the settings of the extension which is going to receive the call
+- Click "Devices & Numbers", click "Presence", click "Permissions"
+- Go to bottom part of the page, find "Select users permitted to answer my
+  calls"
+- Add subscriber to the users list.
