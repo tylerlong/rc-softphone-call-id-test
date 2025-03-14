@@ -39,6 +39,8 @@ Sample event:
       {
         "sipData": {
           "callId": "d75f18b2-320f-403d-9150-9e05bef80365",
+          "toTag": "2225ca18-fdfd-4e0e-8ef1-6bc151b1523e",
+          "fromTag": "10.13.23.238-5070-ab65c1bb-5d48-4108"
         },
         "status": {
           "code": "Answered",
@@ -77,6 +79,12 @@ You will get an event when the call is connected:
         "id": "32b1c547-7b46-4a83-b4e3-f8528c98be99",
         "direction": "Inbound",
         "telephonyStatus": "CallConnected",
+        "sipData": {
+          "toTag": "f099102a-4048-4709-82c3-f044fd369e4e",
+          "fromTag": "10.13.123.208-5070-f581cbbd-3875-4cc",
+          "remoteUri": "-",
+          "localUri": "-"
+        },
         "partyId": "p-a0d7bd72b77dez19548d8007fz97f9f60000-2",
         "telephonySessionId": "s-a0d7bd72b77dez19548d8007fz97f9f60000"
       }
